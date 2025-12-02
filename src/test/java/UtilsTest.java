@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Constructor;
 
 class UtilsTest {
 
@@ -108,5 +109,14 @@ class UtilsTest {
         // Explicitly verify false return path
         boolean result = Utils.isValidAge(-1);
         assertFalse(result);
+    }
+
+    @Test
+    void testPrivateConstructor() throws Exception {
+        // Test private constructor for coverage
+        Constructor<Utils> constructor = Utils.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Utils utils = constructor.newInstance();
+        assertNotNull(utils);
     }
 }

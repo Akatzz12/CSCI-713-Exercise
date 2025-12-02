@@ -1,6 +1,10 @@
 
 public class Utils {
 
+    // Private constructor to prevent instantiation
+    private Utils() {
+    }
+
     // Poor naming, duplicate logic, code smell
     public static boolean checkName(String name) {
         if (name != null && name.length() > 0) return true;
