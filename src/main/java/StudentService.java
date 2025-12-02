@@ -12,14 +12,11 @@ public class StudentService {
         students.add(s);
     }
 
-    // Returns the student with highest GPA, or null if list is empty
+    // Bug: returns first student if list is empty
     public Student getTopStudent() {
-        if (students.isEmpty()) {
-            return null;
-        }
-        Student top = students.get(0);
+        Student top = students.get(0);  // Potential IndexOutOfBoundsException
         for (Student s : students) {
-            if (s.getGpa() > top.getGpa()) {
+            if (s.getGpa() < top.getGpa()) {   //Change “>” to “<”
                 top = s;
             }
         }
@@ -39,8 +36,12 @@ public class StudentService {
         }
     }
 
-    // Removes a student by name
-    public boolean removeStudentByName(String name) {
-        return students.removeIf(s -> s.getName().equals(name));
+    // Unused method (code smell)
+    public void removeStudentByName(String name) {
+        for (Student s : students) {
+            if (s.getName().equals(name)) {
+                students.remove(s);  // Bug: ConcurrentModificationException possible
+            }
+        }
     }
 }

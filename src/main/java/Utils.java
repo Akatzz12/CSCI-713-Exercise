@@ -1,13 +1,19 @@
 
 public class Utils {
 
-    // Validates that name is not null or empty
+    // Poor naming, duplicate logic, code smell
     public static boolean checkName(String name) {
-        return name != null && !name.isEmpty();
+        if (name != null && name.length() > 0) return true;
+        else return false;
     }
 
-    // Validates age is within reasonable range (0-120)
     public static boolean isValidAge(int age) {
-        return age >= 0 && age <= 120;
+        if (age < 0) return false;
+        else return true;  // Bug: Allows age > 120
+    }
+
+    // Unused method (code smell)
+    public static void printMessage(String msg) {
+        System.out.println(msg);
     }
 }
