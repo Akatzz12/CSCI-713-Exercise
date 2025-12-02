@@ -11,16 +11,19 @@ public class Main {
         service.addStudent(s2);
         service.addStudent(s3);
 
-        // Bug: Will crash if students list is empty
-        System.out.println("Top Student: " + service.getTopStudent().getName());
+        // Display top student (handles null case)
+        Student topStudent = service.getTopStudent();
+        if (topStudent != null) {
+            System.out.println("Top Student: " + topStudent.getName());
+        }
 
-        // Code smell: Repeated calls, magic numbers
         System.out.println("Average GPA: " + service.calculateAverageGpa());
 
-        // Dead code / unused
-        int x = 42;
-        if (x > 100) {
-            System.out.println("Impossible");  // Never executes
-        }
+        // Use removeStudentByName method
+        System.out.println("Removing Charlie...");
+        boolean removed = service.removeStudentByName("Charlie");
+        System.out.println("Charlie removed: " + removed);
+
+        System.out.println("Average GPA after removal: " + service.calculateAverageGpa());
     }
 }

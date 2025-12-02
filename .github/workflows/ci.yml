@@ -1,0 +1,61 @@
+name: Java CI with Maven - Tests, Coverage & Mutation Testing
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn clean compile
+
+    - name: Run Unit Tests
+      run: mvn test
+
+    - name: Generate JaCoCo Code Coverage Report
+      run: mvn jacoco:report
+
+    - name: Run PIT Mutation Testing
+      run: mvn org.pitest:pitest-maven:mutationCoverage
+
+    - name: Upload JaCoCo Coverage Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: jacoco-report
+        path: target/site/jacoco/
+
+    - name: Upload PIT Mutation Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: pit-report
+        path: target/pit-reports/
+
+    - name: Display Coverage Summary
+      run: |
+        echo "=== JaCoCo Coverage Report ==="
+        if [ -f target/site/jacoco/index.html ]; then
+          echo "JaCoCo report generated successfully"
+          cat target/site/jacoco/jacoco.csv 2>/dev/null || echo "CSV report available in artifacts"
+        fi
+        echo ""
+        echo "=== PIT Mutation Testing Report ==="
+        if [ -d target/pit-reports ]; then
+          echo "PIT report generated successfully"
+          find target/pit-reports -name "*.xml" -exec cat {} \; 2>/dev/null | head -50 || echo "Reports available in artifacts"
+        fi
+
